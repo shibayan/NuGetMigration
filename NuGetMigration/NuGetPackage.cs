@@ -19,7 +19,7 @@ namespace NuGetMigration
 
                 var document = XDocument.Load(nuspecEntry.Open());
 
-                var xmlns = XNamespace.Get((string)document.Root.Attribute("xmlns"));
+                var xmlns = XNamespace.Get((string)document.Root.Attribute("xmlns") ?? (string)((XElement)document.Root.FirstNode).Attribute("xmlns"));
                 var metadata = document.Root.Element(xmlns + "metadata");
 
                 return new NuGetPackage

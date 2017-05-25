@@ -51,10 +51,36 @@ namespace NuGetMigration
                             .ToList();
         }
 
+        private string FindPackageRepository(string path)
+        {
+            var directory = Path.GetDirectoryName(path);
+
+            while (true)
+            {
+                var packagePath = Path.Combine(directory, "packages");
+
+                if (Directory.Exists(packagePath))
+                {
+                    return packagePath;
+                }
+
+                var dirInfo = Directory.GetParent(directory);
+
+                if (dirInfo == null)
+                {
+                    break;
+                }
+
+                directory = dirInfo.FullName;
+            }
+
+            throw new DirectoryNotFoundException();
+        }
+
         private void BuildDependencyGraph(List<PackageReference> installedPackages)
         {
             // NuGet Package の依存関係グラフを作成
-            var repository = Directory.EnumerateDirectories(Path.Combine(Path.GetDirectoryName(_path), @"..\packages"))
+            var repository = Directory.EnumerateDirectories(FindPackageRepository(_path))
                                       .Select(x => NuGetPackage.Load(Path.Combine(x, Path.GetFileName(x) + ".nupkg")))
                                       .Where(x => installedPackages.Any(xs => xs.Id == x.Id && xs.Version == x.Version))
                                       .ToList();
