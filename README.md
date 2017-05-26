@@ -1,5 +1,5 @@
 # NuGetMigration
-Migrate NuGet package configuration from packages.config to MSBuild (csproj)
+Migrate NuGet package configuration from packages.config to MSBuild (csproj / vbproj)
 
 ## Build
 
