@@ -25,6 +25,14 @@ namespace NuGetMigration
 
         public void MigrateToMSBuild()
         {
+            var packagesPath = Path.Combine(Path.GetDirectoryName(_path), "packages.config");
+
+            if (!File.Exists(packagesPath))
+            {
+                Console.WriteLine($"{packagesPath} is not found.");
+                return;
+            }
+
             var installedPackages = GetInstalledPackages();
 
             BuildDependencyGraph(installedPackages);
@@ -36,6 +44,8 @@ namespace NuGetMigration
             RemovePackageConfig();
 
             _project.Save(_path);
+
+            Console.WriteLine($"{_path} is completed.");
         }
 
         private List<PackageReference> GetInstalledPackages()
@@ -146,7 +156,7 @@ namespace NuGetMigration
                     ?.Remove();
 
             // packages.config 自体を削除
-            File.Delete(Path.Combine(Path.GetDirectoryName(_path), "packages.config"));
+            //File.Delete(Path.Combine(Path.GetDirectoryName(_path), "packages.config"));
         }
     }
 }
