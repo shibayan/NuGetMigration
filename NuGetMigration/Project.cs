@@ -128,7 +128,7 @@ namespace NuGetMigration
             // 新しく PackageReference を追加
             var packages = _graph.Nodes
                                  .Where(x => x.IncomingLinkCount == 0)
-                                 .Select(x => installedPackages.First(xs => xs.Id == x.Label))
+                                 .Select(x => installedPackages.First(xs => string.Compare(xs.Id, x.Label, StringComparison.OrdinalIgnoreCase) == 0))
                                  .ToArray();
 
             var itemGroup = new XElement(xmlns + "ItemGroup");
